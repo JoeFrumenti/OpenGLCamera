@@ -1,3 +1,4 @@
+#include <Glad/glad.c>
 #include <Glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb_image.h>
