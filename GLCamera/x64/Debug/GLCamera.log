@@ -1,3 +1,4 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (GLCoordinate.vcxproj, GLShader.vcxproj, GLTexture.vcxproj, GLTransformation.vcxproj, HelloTriangle.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Source.cpp
+C:\Users\Joe\Libraries\Include\OpenGL\Texture.h(52): warning C4715: 'Texture::findFormat': not all control paths return a value
   GLCamera.vcxproj -> D:\Joe\GameDev\Git\OpenGLCamera\x64\Debug\GLCamera.exe

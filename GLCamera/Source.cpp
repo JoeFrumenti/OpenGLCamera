@@ -11,7 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-GLuint VAO, VBO, EBO;
+GLuint VAO, VBO;
 unsigned int texture;
 unsigned int texture2;
 
@@ -48,14 +48,14 @@ float vertices[] = { // positions           // texture coords
 					   -0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
 					   -0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
 						
-					   0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
+					    0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
 						0.5f,  0.5f, -0.5f, 1.0f, 1.0f,
 						0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 						0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 						0.5f, -0.5f,  0.5f, 0.0f, 0.0f,
 						0.5f,  0.5f,  0.5f, 1.0f, 0.0f,
 					   
-						-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+					   -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 						0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
 						0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
 						0.5f, -0.5f,  0.5f, 1.0f, 0.0f,
@@ -101,15 +101,10 @@ void processInput(GLFWwindow* window)
 		mixValue += 0.01f;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		mixValue -= 0.01f;
-	
-
 }
 
 int main()
 {
-	
-	
-
 
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data2 = stbi_load("awesomeface.png", &width2, &height2,
@@ -162,22 +157,19 @@ int main()
 
 	
 	Shader ourShader("vertexshader.vs", "fragmentshader.fs");
+	
 	std::string offval = "offsetvalue";
 
 
 	//set up Vertex Array Object
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
 
 	//Bind all the buffers and buffer data to them
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -191,57 +183,27 @@ int main()
 	glBindVertexArray(0);
 
 	//texture stuff
-	glGenTextures(1, &texture);
-	glGenTextures(1, &texture2);
-	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	
+	Texture face = Texture("awesomeface.png", GL_TEXTURE0);
+	Texture box = Texture("container.jpg", GL_TEXTURE1);
 
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB,
-			GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		std::cout << "texture success!" << std::endl;
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2);
-
-	if (data2)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width2, height2, 0, GL_RGBA,
-			GL_UNSIGNED_BYTE, data2);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		std::cout << "texture success!" << std::endl;
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-
-	stbi_image_free(data);
-	stbi_image_free(data2);
-	
 	ourShader.use();
 	ourShader.setFloat(offval, 0.0f);
 
-	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0); // manually
-	ourShader.setInt("texture2", 1); // or with shader class
+
+	ourShader.setInt("texture2", 0); //with shader class
+	glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 1); // or manually
+	
 
 	//MATHS
 	
+	//local/world space
 	glm::mat4 model = glm::mat4(1.0f);
-	
 
+	//view space
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
+	//pre clip space (set perspective vs ortho)
 	glm::mat4 perspective = glm::mat4(1.0f);
 	perspective = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
@@ -262,31 +224,27 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);	//apply glclearcolor
 
 		//Cool transform stuff
-		glm::mat4 trans = glm::mat4(1.0f);
 		
 		for (int i = 0; i < 10; i++)
 		{
-			glm::mat4 trans = glm::mat4(1.0);
-			trans = glm::translate(trans, cubePositions[i]);
-			trans = glm::rotate(trans, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.3f));
+			glm::mat4 model = glm::mat4(1.0);
+			model = glm::translate(model, cubePositions[i]);
+			model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.3f));
 			
 
 			//if (i % 3 == 0)
 			{
-				trans = glm::rotate(trans, glm::radians(10.0f * (float)glfwGetTime()), glm::vec3(1.0f, 0.3f, 0.3f));
+				model = glm::rotate(model, glm::radians(10.0f * (float)glfwGetTime()), glm::vec3(1.0f, 0.3f, 0.3f));
 			}
 
-			ourShader.setMat4("model", trans);
+			ourShader.setMat4("model", model);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
 
 		//put the transform in our shader
-		model = glm::rotate(model, 0.0005f * (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
-
-		//glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		
 		ourShader.setMat4("view", view);
 		ourShader.setMat4("perspective", perspective);
@@ -295,10 +253,6 @@ int main()
 
 		//draw triangle
 		glBindVertexArray(VAO);
-		//glDrawArrays(GL_TRIANGLES, 0, 3);
-		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		
-
 
 		//check and call events and swap buffers
 		glfwSwapBuffers(window);
@@ -307,7 +261,6 @@ int main()
 	}
 
 	glfwTerminate(); //terminate program
-
 
 	return 0;
 }
