@@ -200,9 +200,10 @@ int main()
 	//local/world space
 	glm::mat4 model = glm::mat4(1.0f);
 
-	//view space
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
+	
+
+	glm::mat4 view;
 
 	//pre clip space (set perspective vs ortho)
 	glm::mat4 perspective = glm::mat4(1.0f);
@@ -226,23 +227,34 @@ int main()
 
 		//Cool transform stuff
 		
+		//world space
 		for (int i = 0; i < 10; i++)
 		{
 			glm::mat4 model = glm::mat4(1.0);
 			model = glm::translate(model, cubePositions[i]);
 			model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.3f));
-			
-
-			//if (i % 3 == 0)
-			{
-				model = glm::rotate(model, glm::radians(10.0f * (float)glfwGetTime()), glm::vec3(1.0f, 0.3f, 0.3f));
-			}
 
 			ourShader.setMat4("model", model);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
+		//view space
+		const float radius = 10.0f;
+		float camX = (cos(glfwGetTime()) * radius);
+		float camZ = (sin(glfwGetTime()) * radius);
+		glm::vec3 cameraPos = glm::vec3(camX, 0, camZ);
+
+		glm::vec3 cameraFront = glm::vec3(0, 0, -1);
+
+		glm::vec3 up = glm::vec3(0, 1, 0);
+
+		
+		//std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
+		
+
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront,
+			up);
 
 		//put the transform in our shader
 
