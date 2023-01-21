@@ -1,6 +1,7 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (GLCoordinate.vcxproj, GLShader.vcxproj, GLTexture.vcxproj, GLTransformation.vcxproj, HelloTriangle.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Source.cpp
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(244,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(245,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(241,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(273,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(274,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Joe\Libraries\Include\OpenGL\Texture.h(52): warning C4715: 'Texture::findFormat': not all control paths return a value
   GLCamera.vcxproj -> D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\x64\Debug\GLCamera.exe

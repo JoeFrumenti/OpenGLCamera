@@ -24,6 +24,17 @@ int width2, height2, nrChannels2;
 
 float mixValue = 0.2f;
 
+//camera variables 
+glm::vec3 cameraPos = glm::vec3(0, 0, 3);
+glm::vec3 direction = (cameraPos - glm::vec3(0, 0, 0));
+glm::vec3 cameraFront = glm::vec3(0, 0, -1);
+glm::vec3 right = (glm::cross(direction, glm::vec3(0, 1, 0)));
+glm::vec3 cameraUp = glm::vec3(0, 1, 0);
+
+//deltatime variables
+float deltaTime = 0.0f; // Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
 
 
 //vertices to make a rectangle hopefully
@@ -96,12 +107,26 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 //input function
 void processInput(GLFWwindow* window)
 {
+	
+
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
 		mixValue += 0.01f;
 	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
 		mixValue -= 0.01f;
+
+	const float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) *
+		cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) *
+		cameraSpeed;
 }
 
 int main()
@@ -208,10 +233,14 @@ int main()
 	//pre clip space (set perspective vs ortho)
 	glm::mat4 perspective = glm::mat4(1.0f);
 	perspective = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	
 
 	//RENDER LOOP
 	while (!glfwWindowShouldClose(window))
 	{
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 		//input
 		processInput(window);
 
@@ -243,18 +272,15 @@ int main()
 		const float radius = 10.0f;
 		float camX = (cos(glfwGetTime()) * radius);
 		float camZ = (sin(glfwGetTime()) * radius);
-		glm::vec3 cameraPos = glm::vec3(camX, 0, camZ);
+		
 
-		glm::vec3 cameraFront = glm::vec3(0, 0, -1);
-
-		glm::vec3 up = glm::vec3(0, 1, 0);
 
 		
 		//std::cout << cameraPos.x << " " << cameraPos.y << " " << cameraPos.z << std::endl;
 		
 
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront,
-			up);
+		view = glm::lookAt(cameraPos, cameraFront + cameraPos,
+			cameraUp);
 
 		//put the transform in our shader
 
