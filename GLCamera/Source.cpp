@@ -22,14 +22,22 @@ unsigned char* data = stbi_load("container.jpg", &width, &height,
 
 int width2, height2, nrChannels2;
 
+
+//Input variables
 float mixValue = 0.2f;
+float lastX = 400, lastY = 300;
+bool firstMouse = true;
 
 //camera variables 
+
 glm::vec3 cameraPos = glm::vec3(0, 0, 3);
 glm::vec3 direction = (cameraPos - glm::vec3(0, 0, 0));
 glm::vec3 cameraFront = glm::vec3(0, 0, -1);
 glm::vec3 right = (glm::cross(direction, glm::vec3(0, 1, 0)));
 glm::vec3 cameraUp = glm::vec3(0, 1, 0);
+
+float yaw = -90.0f;
+float pitch = 0;
 
 //deltatime variables
 float deltaTime = 0.0f; // Time between current frame and last frame
@@ -104,6 +112,33 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+//
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+	float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+	yaw += xoffset;
+	pitch += yoffset;
+	pitch = glm::clamp(pitch, -89.0f, 89.0f);
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
+
+}
+
 //input function
 void processInput(GLFWwindow* window)
 {
@@ -142,6 +177,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
 	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//create window
@@ -156,7 +192,7 @@ int main()
 	
 	//set window to be the one we are working on
 	glfwMakeContextCurrent(window);
-
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
 	//Load GLAD, ensure it's working
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -169,6 +205,7 @@ int main()
 	//set GL to work properly and dynamically with the window (stretchy stuff)
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetCursorPosCallback(window, mouse_callback);
 
 	//tell OpenGL how to use textures
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -256,6 +293,10 @@ int main()
 
 		//Cool transform stuff
 		
+
+
+
+
 		//world space
 		for (int i = 0; i < 10; i++)
 		{
