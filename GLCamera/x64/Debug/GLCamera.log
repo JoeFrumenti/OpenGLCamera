@@ -1,13 +1,13 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (GLCoordinate.vcxproj, GLShader.vcxproj, GLTexture.vcxproj, GLTransformation.vcxproj, HelloTriangle.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Source.cpp
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(132,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(133,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(136,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(137,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(138,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(139,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(289,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(325,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(326,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Joe\Libraries\Include\OpenGL\Camera.cpp(20,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Joe\Libraries\Include\OpenGL\Camera.cpp(21,11): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Joe\Libraries\Include\OpenGL\Camera.cpp(24,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Joe\Libraries\Include\OpenGL\Camera.cpp(25,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Joe\Libraries\Include\OpenGL\Camera.cpp(26,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\Joe\Libraries\Include\OpenGL\Camera.cpp(27,10): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(253,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(289,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\GLCamera\Source.cpp(290,14): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Joe\Libraries\Include\OpenGL\Texture.h(52): warning C4715: 'Texture::findFormat': not all control paths return a value
   GLCamera.vcxproj -> D:\Joe\GameDev\Git\LearnOpenGL\Getting Started\OpenGLCamera\x64\Debug\GLCamera.exe

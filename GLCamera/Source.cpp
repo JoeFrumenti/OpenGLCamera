@@ -6,6 +6,7 @@
 #include <OpenGL/Shader.h>
 #include <OpenGL/Texture.h>
 #include <OpenGL/Camera.h>
+#include <OpenGL/Camera.cpp>
 
 #include <iostream>
 
@@ -26,20 +27,14 @@ int width2, height2, nrChannels2;
 
 //Input variables
 float mixValue = 0.2f;
-float lastX = 400, lastY = 300;
-bool firstMouse = true;
-float Zoom = 45.0f;
 
 //camera variables 
 
 glm::vec3 cameraPos = glm::vec3(0, 0, 3);
 glm::vec3 direction = (cameraPos - glm::vec3(0, 0, 0));
-glm::vec3 cameraFront = glm::vec3(0, 0, -1);
 glm::vec3 right = (glm::cross(direction, glm::vec3(0, 1, 0)));
 glm::vec3 cameraUp = glm::vec3(0, 1, 0);
 
-float yaw = -90.0f;
-float pitch = 0;
 
 //deltatime variables
 float deltaTime = 0.0f; // Time between current frame and last frame
@@ -112,44 +107,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	
-	Zoom -= (float)yoffset;
-	if (Zoom < 1.0f)
-		Zoom = 1.0f;
-	else if (Zoom > 45.0f)
-		Zoom = 45.0f;
 
-
-}
 
 //
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (firstMouse)
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos;
-	lastX = xpos;
-	lastY = ypos;
-	float sensitivity = 0.1f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-	yaw += xoffset;
-	pitch += yoffset;
-	pitch = glm::clamp(pitch, -89.0f, 89.0f);
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(direction);
 
-}
 
 //input function
 void processInput(GLFWwindow* window)
@@ -178,6 +139,8 @@ void processInput(GLFWwindow* window)
 
 int main()
 {
+	Camera cam;
+	std::cout << cam.getZoom();
 
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data2 = stbi_load("awesomeface.png", &width2, &height2,
@@ -219,6 +182,7 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
+
 
 	//tell OpenGL how to use textures
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -285,7 +249,7 @@ int main()
 	//RENDER LOOP
 	while (!glfwWindowShouldClose(window))
 	{
-		perspective = glm::perspective(glm::radians(Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
+		perspective = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
