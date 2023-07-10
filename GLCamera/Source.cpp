@@ -5,6 +5,7 @@
 
 #include <OpenGL/Shader.h>
 #include <OpenGL/Texture.h>
+#include <OpenGL/Camera.h>
 
 #include <iostream>
 
@@ -27,6 +28,7 @@ int width2, height2, nrChannels2;
 float mixValue = 0.2f;
 float lastX = 400, lastY = 300;
 bool firstMouse = true;
+float Zoom = 45.0f;
 
 //camera variables 
 
@@ -42,8 +44,6 @@ float pitch = 0;
 //deltatime variables
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
-
-
 
 //vertices to make a rectangle hopefully
 float vertices[] = { // positions           // texture coords
@@ -110,6 +110,18 @@ glm::vec3 cubePositions[] = {
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	
+	Zoom -= (float)yoffset;
+	if (Zoom < 1.0f)
+		Zoom = 1.0f;
+	else if (Zoom > 45.0f)
+		Zoom = 45.0f;
+
+
 }
 
 //
@@ -193,6 +205,7 @@ int main()
 	//set window to be the one we are working on
 	glfwMakeContextCurrent(window);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetScrollCallback(window, scroll_callback);
 	
 	//Load GLAD, ensure it's working
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -261,20 +274,18 @@ int main()
 	
 	//local/world space
 	glm::mat4 model = glm::mat4(1.0f);
-
-
 	
 
 	glm::mat4 view;
 
 	//pre clip space (set perspective vs ortho)
 	glm::mat4 perspective = glm::mat4(1.0f);
-	perspective = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 	
 
 	//RENDER LOOP
 	while (!glfwWindowShouldClose(window))
 	{
+		perspective = glm::perspective(glm::radians(Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
