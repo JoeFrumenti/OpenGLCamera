@@ -6,7 +6,6 @@
 #include <OpenGL/Shader.h>
 #include <OpenGL/Texture.h>
 #include <OpenGL/Camera.h>
-#include <OpenGL/Camera.cpp>
 
 #include <iostream>
 
@@ -23,22 +22,6 @@ unsigned char* data = stbi_load("container.jpg", &width, &height,
 	&nrChannels, 0);
 
 int width2, height2, nrChannels2;
-
-
-//Input variables
-float mixValue = 0.2f;
-
-//camera variables 
-
-glm::vec3 cameraPos = glm::vec3(0, 0, 3);
-glm::vec3 direction = (cameraPos - glm::vec3(0, 0, 0));
-glm::vec3 right = (glm::cross(direction, glm::vec3(0, 1, 0)));
-glm::vec3 cameraUp = glm::vec3(0, 1, 0);
-
-
-//deltatime variables
-float deltaTime = 0.0f; // Time between current frame and last frame
-float lastFrame = 0.0f; // Time of last frame
 
 //vertices to make a rectangle hopefully
 float vertices[] = { // positions           // texture coords
@@ -109,38 +92,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 
 
-//
-
-
-//input function
-void processInput(GLFWwindow* window)
-{
-	
-
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		mixValue += 0.01f;
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		mixValue -= 0.01f;
-
-	const float cameraSpeed = 2.5f * deltaTime; // adjust accordingly
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-		cameraPos += cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		cameraPos -= cameraSpeed * cameraFront;
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) *
-		cameraSpeed;
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) *
-		cameraSpeed;
-}
-
 int main()
 {
-	Camera cam;
-	std::cout << cam.getZoom();
 
 	stbi_set_flip_vertically_on_load(true);
 	unsigned char* data2 = stbi_load("awesomeface.png", &width2, &height2,
@@ -249,7 +202,7 @@ int main()
 	//RENDER LOOP
 	while (!glfwWindowShouldClose(window))
 	{
-		perspective = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+		perspective = glm::perspective(glm::radians(Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
@@ -268,10 +221,6 @@ int main()
 
 		//Cool transform stuff
 		
-
-
-
-
 		//world space
 		for (int i = 0; i < 10; i++)
 		{
